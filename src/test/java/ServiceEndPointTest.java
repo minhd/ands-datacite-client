@@ -72,31 +72,94 @@ public class ServiceEndPointTest {
 
     // TODO: 8/12/2015 Update getMetadataFail for contentType.XML
     @Test
-    public void getMetadataFail(){
-        /*given().queryParam("doi", props.getProperty("test_doi1_fail")).
+    public void getMetadataFail() {
+        given().queryParam("doi", props.getProperty("test_doi1_fail")).
                 when().get(props.getProperty("service_url") + "xml.xml")
-                .then().contentType(ContentType.XML).statusCode(200)
-                .body("response.@type", equalTo("failure"))
-                .body("response.responsecode", equalTo("MT011"))
-        ;*/
+                .then().statusCode(200)
+//                .body("response.@type", equalTo("failure"))
+//                .body("response.responsecode", equalTo("MT011"))
+        ;
     }
+
     // TODO: 8/12/2015 MINT
+    @Test
+    public void postMint() {
+        Response response =
+                given()
+                        .header("Authorization", props.getProperty("auth_header"))
+                        .queryParam("url", props.getProperty("test_url1"))
+                        .queryParam("app_id", props.getProperty("app_id"))
+                        .param("xml", APIProperties.getFileContent("sample.xml"))
+                        .body(APIProperties.getFileContent("sample.xml"))
+                        .when().get(props.getProperty("service_url") + "mint.xml/")
+                        .then()
+//                        .contentType(ContentType.XML)
+//                        .body("response.@type", equalTo("success"))
+//                        .body("response.responsecode", equalTo("MT003"))
+//                        .body("response.doi", equalTo(props.getProperty("test_doi2")))
+//                        .body("response.app_id", equalTo(props.getProperty("app_id")))
+                        .extract().response();
+//        System.out.println(response.getBody().asString());
+    }
 
     // TODO: 8/12/2015 UPDATE URL
+    @Test
+    public void postUpdateUrl() {
+        Response response = given()
+                .header("Authorization", props.getProperty("auth_header"))
+                .queryParam("url", props.getProperty("test_url2"))
+                .queryParam("doi", props.getProperty("test_doi2"))
+                .queryParam("app_id", props.getProperty("app_id"))
+                .when().get(props.getProperty("service_url") + "update.xml/")
+                .then()
+                .contentType(ContentType.XML)
+                .body("response.@type", equalTo("success"))
+                .body("response.responsecode", equalTo("MT002"))
+                .body("response.doi", equalTo(props.getProperty("test_doi2")))
+                .body("response.app_id", equalTo(props.getProperty("app_id")))
+                .extract().response();
+//        System.out.println(response.getBody().asString());
+    }
+
     // TODO: 8/12/2015 UPDATE XML
     // TODO: 8/12/2015 UPDATE URL AND XML
 
-    // TODO: 8/12/2015 DEACTIVATE
     @Test
-    public void getDeactivate(){
-        Response response =
-                given().queryParam("doi", props.getProperty("test_doi2"))
-                .when().get(props.getProperty("service_url") + "deactivate.json")
-                .then().extract().response();
-        System.out.println(response.getBody().asString());
-    }
-    // TODO: 8/12/2015 ACTIVATE
+    public void getDeactivate() {
+        Response response = given()
+                .header("Authorization", props.getProperty("auth_header"))
+                .queryParam("doi", props.getProperty("test_doi2"))
+                .queryParam("app_id", props.getProperty("app_id"))
+                .when().get(props.getProperty("service_url") + "deactivate.xml/")
+                .then()
+                .contentType(ContentType.XML)
+                .body("response.@type", equalTo("success"))
+                .body("response.responsecode", equalTo("MT003"))
+                .body("response.doi", equalTo(props.getProperty("test_doi2")))
+                .body("response.app_id", equalTo(props.getProperty("app_id")))
+                .extract().response();
+//        System.out.println(response.getBody().asString());
 
+    }
+
+    @Test
+    public void getActivate() {
+        Response response = given()
+                .header("Authorization", props.getProperty("auth_header"))
+                .queryParam("doi", props.getProperty("test_doi2"))
+                .queryParam("app_id", props.getProperty("app_id"))
+                .param("xml", APIProperties.getFileContent("sample.xml"))
+                .when().get(props.getProperty("service_url") + "activate.xml/")
+                .then()
+                .contentType(ContentType.XML)
+                .body("response.@type", equalTo("success"))
+                .body("response.responsecode", equalTo("MT004"))
+                .body("response.doi", equalTo(props.getProperty("test_doi2")))
+                .body("response.app_id", equalTo(props.getProperty("app_id")))
+                .extract().response();
+//        System.out.println(response.getBody().asString());
+
+    }
 
 
 }

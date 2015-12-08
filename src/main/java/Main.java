@@ -5,6 +5,8 @@ public class Main {
         try {
             APIProperties properties = new APIProperties();
             System.out.println(properties.getProperty("base_url"));
+
+            System.out.println(properties.getFileContent("sample.xml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
